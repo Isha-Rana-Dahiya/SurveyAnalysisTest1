@@ -88,5 +88,11 @@ Summary of proposed implementation with the azure services we need(can calculate
 Workflow Overview
 Participant submits survey → PDF sent to email → Logic App extracts PDF → PDF uploaded to Blob Storage → Azure Function triggers → Document Intelligence extracts answers → Scores calculated → Response returned to Postman
 
+Created Azure account with ask@curaselects.com
+- free trial with $200 credits to be used in 30 days
+- 55+ services always free
+- Popular services free for 12 months 
+- https://portal.azure.com/#view/Microsoft_Azure_Billing/FreeServicesBlade
+- After the credit is over, microsoft will ask if we would want to continue with pay-as-you-go. If we do, then we will pay if we use more than the free amounts of services. 
 
 
