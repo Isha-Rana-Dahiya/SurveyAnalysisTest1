@@ -1,4 +1,10 @@
 # SurveyAnalysisTest1
+1. create a new godaddy email account
+2. change setting on godaddy admin to forward the email of survey to new go daddy account
+3. test azure function locally
+4. use Singapore datacenter
+
+
 Resources - 
 Azure storage account - blob
 doc intelligence service
