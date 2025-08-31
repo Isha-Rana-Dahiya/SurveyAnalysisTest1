@@ -6,11 +6,12 @@
 
 
 Resources - 
-Azure storage account - blob
+Azure storage account - blob-Training documents need to be stored in Azure blob storage container with CORS enabled for Azure document intelligence
+Use Custom extraction model which is in GA as they would last for 3 years and do not use preview as they last for three months.
 doc intelligence service
 resource group
 Create a custom extraction project document intelligence studio
-refer to guidelines for labelling custom model.
+refer to guidelines for labelling custom model
 
 Forming a connection to training data 
     - will use doc intelli resource from azure
