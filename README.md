@@ -10,6 +10,7 @@ Azure storage account - blob
 doc intelligence service
 resource group
 Create a custom extraction project document intelligence studio
+refer to guidelines for labelling custom model.
 
 Forming a connection to training data 
     - will use doc intelli resource from azure
