@@ -97,4 +97,112 @@ Created Azure account with ask@curaselects.com
 - https://portal.azure.com/#view/Microsoft_Azure_Billing/FreeServicesBlade
 - After the credit is over, microsoft will ask if we would want to continue with pay-as-you-go. If we do, then we will pay if we use more than the free amounts of services. 
 
+Custom classification model uses a different set of APIs. We need to use document classifiers classify document to call the service. And document classifiers get classify result to get the result. We will copy the model id in the studio.
+
+
+Budget 60
+ZRS storage account
+deployed blob storage    
+CORS is an HTTP feature that enables a web application running under one domain to access resources in another domain. Web browsers implement a security restriction known as same-origin policy that prevents a web page from calling APIs in a different domain. CORS provides a secure way to allow one domain (the origin domain) to call APIs in another domain. Enable CORS. 
+
+
+Detailed Step-by-Step Implementation of Your Survey Response Scoring Project
+Below is a comprehensive, low-code guide to ingest filled survey PDFs from your GoDaddy mailbox, extract responses via Azure Document Intelligence, map them to scores, compute S1 and S2 totals, and send the results back via email.
+
+Prerequisites
+- An Azure Document Intelligence (formerly Form Recognizer) resource with a trained or prebuilt model
+- An Azure Storage Account with a private Blob container
+- A scoreLookup.json file uploaded to that container
+- A licensed Power Automate user account (e.g., your Azure AD ask@curaselects.com)
+- GoDaddy email credentials for IMAP (incoming) and SMTP (outgoing)
+
+
+Step 2: Build the Power Automate Flow
+2.1 Sign In and Create Flow
+- Go to https://make.powerautomate.com and sign in with your Azure AD account.
+- In the left nav, select Create → Automated cloud flow.
+- Give it a name (e.g., SurveyScoringFlow) and click Skip, then Create.
+2.2 Trigger: When a New Email Arrives (IMAP)
+1. Click + New step → search IMAP → select When a new email arrives (IMAP).
+2. Add a new connection using your GoDaddy settings:
+- Server: imap.secureserver.net
+- Port: 993
+- Encryption: SSL
+- Username/password: your GoDaddy email and password
+
+3. - For Folder, choose /Inbox or a dedicated folder.
+4.  Under Advanced options, set Include Attachments to Yes and Only with Attachments as needed.
+
+Get the PDF Attachment
+1. - Click + New step inside the flow.
+2. - Search IMAP → select Get attachment (IMAP).
+3. - For Message Id, select Message Id from the trigger.
+4. - (Optional) Filter on attachments ending in .pdf.
+2.4 Analyze PDF with Azure Document Intelligence
+1. - + New step → search Document Intelligence → select Analyze document.
+2. - Choose your Azure resource and the appropriate model.
+3. - For Document Content, use the PDF attachment from the prior action.
+4. - Rename this action to ExtractedResponses.
+  
+   - 2.5 Retrieve and Parse Your Lookup JSON
+1. + New step → search Azure Blob → select Get blob content.
+2. Pick your storage account, container lookupfiles, and blob scoreLookup.json.
+3. + New step → search Parse JSON.
+4. For Content, use the file content from Get blob content.
+5. Paste or auto-generate the JSON schema from your local file.
+2.6 Initialize Score Variables
+- + New step → Initialize variable:
+- Name: S1
+- Type: Integer
+- Value: 0
+- Repeat to initialize S2 with value 0.
+2.7 Score Questions 1–12 (Compute S1)
+1. + New step → Apply to each over the array
+["Q1_Response","Q2_Response",…,"Q12_Response"].
+2. Inside the loop:
+- Compose CurrentAnswer:
+
+body('ExtractedResponses')?[item()]
+
+- Filter array on parsed JSON where
+item()?['Response'] equals outputs('Compose_CurrentAnswer').
+- Compose CurrentScore:
+
+first(body('Filter_array'))?['Score']
+
+- Increment variable S1 by
+int(outputs('Compose_CurrentScore')).
+2.8 Score Questions 13–20 (Compute S2)
+1. + New step → Apply to each over
+["Q13_Response",…,"Q20_Response"].
+2. Repeat the same actions as in 2.7, but Increment variable S2.
+2.9 Send Email with S1 and S2 via SMTP
+1. + New step → search SMTP → select Send email (SMTP).
+2. Create a connection using your GoDaddy SMTP settings:
+- Server: smtpout.secureserver.net
+- Port: 465
+- Encryption: SSL
+- Username/password: GoDaddy credentials
+3. To: dynamic content From from the IMAP trigger.
+4. Subject:
+  Your Survey Scores – S1=@{variables('S1')}, S2=@{variables('S2')}
+5. Body:
+  Hello,
+
+Thanks for completing our survey.
+Your total for questions 1–12 (S1) is @{variables('S1')}.
+Your total for questions 13–20 (S2) is @{variables('S2')}.
+
+Regards,
+Your Team
+
+Step 3: Test, Monitor, and Refine
+1. Save the flow and click Test → Manually.
+2. Send a sample survey PDF to your GoDaddy email.
+3. Verify the flow run history, check S1/S2 values, and confirm the return email.
+4. Adjust parsing logic or lookup entries if any responses aren’t matching.
+
+
+
+
 
