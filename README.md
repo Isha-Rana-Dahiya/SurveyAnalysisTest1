@@ -122,6 +122,7 @@ Step 2: Build the Power Automate Flow
 - Go to https://make.powerautomate.com and sign in with your Azure AD account.
 - In the left nav, select Create → Automated cloud flow.
 - Give it a name (e.g., SurveyScoringFlow) and click Skip, then Create.
+  
 2.2 Trigger: When a New Email Arrives (IMAP)
 1. Click + New step → search IMAP → select When a new email arrives (IMAP).
 2. Add a new connection using your GoDaddy settings:
