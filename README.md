@@ -221,6 +221,69 @@ https://learn.microsoft.com/en-us/training/modules/intro-to-logic-apps/4-when-to
 
 2. Provision a Dedicated Microsoft 365 Mailbox
 - In the Azure portal, go to Azure Active Directory → Users → New user.
+- - Fill in name (e.g. Survey Bot), username (surveys@…), and assign any Azure AD role (User is fine).
+- Assign a Microsoft 365 license that includes Exchange Online.
+- Sign in once at office.com to complete mailbox setup and set a strong password.
+
+3. Create a Logic App
+- In Azure portal, click Create a resource → Integration → Logic App (Consumption).
+- Enter a name (e.g. “SurveyProcessor”), choose your subscription, resource group, and region.
+- Review and Create.
+- Once deployed, click Go to resource to open the Logic App Designer.
+4. Configure the Office 365 Outlook Trigger
+- In the Designer, select Blank Logic App.
+- Search and add the Office 365 Outlook connector.
+- Choose trigger When a new email arrives (V3).
+- Sign in with your dedicated Microsoft 365 survey inbox credentials.
+- Configure:
+- Folder: Inbox
+- Include Attachments: Yes (if surveys come as attachments)
+- Subject Filter: e.g. “Survey Submission”
+
+5. Extract and Parse Survey Data
+- Add a Get email (V3) action to retrieve full body and attachments.
+- If survey data is in the email body:
+- Add a Compose action.
+- Use expressions such as split(body('Get_email_(V3)'), '\n') to get each line.
+- If survey is an attachment (CSV/JSON):
+- Add Get attachment action.
+- Add Parse JSON action, supplying a schema that matches the survey format.
+
+6. Calculate S1 and S2 Scores
+- Initialize two integer variables:
+- S1 = 0
+- S2 = 0
+- Add an Apply to each loop over parsed question-answer pairs.
+- Inside the loop, use a Condition:
+- If Question number ≤ 12, use Increment variable to add the answer value to S1.
+- Else, add to S2.
+- After the loop completes, you’ll have final S1 and S2.
+
+7. Compose and Send the Response Email
+- Add Send an email (V2) action from Office 365 Outlook.
+- Configure:
+- To: use the original sender’s email (from from trigger)
+- Subject: “Your Survey Scores”
+- Body:
+Thank you for your submission.
+Your scores:
+- S1: @{variables('S1')}
+- S2: @{variables('S2')}
+- Save the Logic App.
+
+8. Add Error Handling and Monitoring
+- Click the ellipsis (…) on any action and choose Configure run after.
+- For critical steps (parsing, scoring), configure a parallel branch on Has Failed to:
+- Send yourself an alert email with the failure details.
+- Write a log entry to Azure Blob Storage or Log Analytics.
+- Enable Diagnostic logs under your Logic App’s Monitoring section to capture execution history.
+
+You now have an end-to-end Logic App that
+- Picks up forwarded GoDaddy emails
+- Parses survey answers
+- Calculates S1 and S2
+- Sends the results back automatically
+
 
 
 
