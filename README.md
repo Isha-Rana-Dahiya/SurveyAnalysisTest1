@@ -203,6 +203,24 @@ Step 3: Test, Monitor, and Refine
 3. Verify the flow run history, check S1/S2 values, and confirm the return email.
 4. Adjust parsing logic or lookup entries if any responses aren’t matching.
 
+**Custom connectors**
+You can write custom connectors to access services that don't have prebuilt connectors. These services must have a REST or SOAP API, which isn't surprising because a connector is just a wrapper around an API.
+
+https://learn.microsoft.com/en-us/training/modules/intro-to-logic-apps/3-how-logic-apps-works
+
+https://learn.microsoft.com/en-us/training/modules/intro-to-logic-apps/4-when-to-use-logic-apps
+
+**Detailed Step-by-Step Implementation for the GoDaddy-to-Logic Apps Workaround**
+
+1. Forward GoDaddy Survey Emails to a Microsoft 365 Mailbox
+- Sign in to your GoDaddy Workspace Email Admin Center.
+- Select the mailbox that receives survey submissions.
+- In Mail Settings, choose Auto-Forwarding (or Rules).
+- Create a rule to forward all incoming survey emails to your dedicated Microsoft 365 address (e.g. surveys@yourdomain.onmicrosoft.com).
+- Save and test by sending a sample survey from the original sender.
+
+2. Provision a Dedicated Microsoft 365 Mailbox
+- In the Azure portal, go to Azure Active Directory → Users → New user.
 
 
 
